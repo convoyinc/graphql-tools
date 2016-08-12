@@ -279,9 +279,15 @@ function assertResolveFunctionsPresent(schema, resolverValidationOptions = {}) {
   const {
     requireResolversForArgs = true,
     requireResolversForNonScalar = true,
+    requireResolversForAllFields = false,
   } = resolverValidationOptions;
 
   forEachField(schema, (field, typeName, fieldName) => {
+    // requires a resolve function for *every* field.
+    if (requireResolversForAllFields) {
+      expectResolveFunction(field, typeName, fieldName);
+    }
+
     // requires a resolve function on every field that has arguments
     if (requireResolversForArgs && field.args.length > 0) {
       expectResolveFunction(field, typeName, fieldName);
